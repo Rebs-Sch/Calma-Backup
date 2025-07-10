@@ -26,6 +26,7 @@ class Creator {
     function criaDiretorios() {
         $dirs = [
             "sistema",
+            "sistema/util",
             "sistema/model",
             "sistema/control",
             "sistema/view",
@@ -73,7 +74,7 @@ class Creator {
     }
     
     public static function buscaBanco() {
-        header('Content-Type: application/json'); // Retorna JSON
+        header('Content-Type: application/json');
         
         $servidor = $_POST['servidor'] ?? '';
         $usuario = $_POST['usuario'] ?? '';
@@ -161,7 +162,7 @@ class Conexao {
 }
 ?>
 EOT;
-        file_put_contents("sistema/model/conexao.php", $conteudo);
+        file_put_contents("sistema/util/Conexao.php", $conteudo);
     }
 
     function ClassesControl(){
@@ -204,14 +205,23 @@ EOT;
             $atributos = $this->buscaAtributos($nomeTabela);
 
             $inputs = '';
-            
-            foreach ($atributos as $atributo) {
+            $Chaves = [];
+
+            foreach($atributos as $atributo){
                 if($atributo->key == 'PRI'){
+                    $Chaves[] = $atributo->Field;
+                }
+
+                $att = $atributo->Field;
+                $inputs = '';
+
+                if (in_array($att, $Chaves)) {
                     continue;
-                }elseif (is_int($atributo)){
-                    $inputs .= "<div class='formgroup'>\n<label>{$atributo}:</label>\n<input type='number' id='{$atributo}' name='{$atributo}' required>\n</div>\n";
+                }
+                if (is_int($atributo->Type)){
+                    $inputs .= "<input type='number' id='{$att}' name='{$att}' required>";
                 }else{
-                    $inputs .= "<div class='formgroup'>\n<label>{$atributo}:</label>\n<input type='text' id='{$atributo}' name='{$atributo}' required>\n</div>\n";
+                    $inputs .= "<input type='text' id='{$att}' name='{$att}' required>";
                 }
             }
 
