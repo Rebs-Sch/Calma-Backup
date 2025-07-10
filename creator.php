@@ -18,6 +18,7 @@ class Creator {
         $this->ClassesModel();
         $this->ClasseConexao();
         $this->ClassesControl();
+        $this->ClassesView();
         $this->compactar();
         header("location:index.php?msg=2");
     }
